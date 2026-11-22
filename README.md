@@ -65,3 +65,4 @@ npm install
 npm run dev
 ```
 - Frontend UI: `http://localhost:5173`
+YouTube Demo Link: https://youtu.be/MSGVyA_MK7Q
