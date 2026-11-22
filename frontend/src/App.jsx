@@ -17,6 +17,7 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [backendStatus, setBackendStatus] = useState('checking'); // 'online' | 'offline' | 'checking'
   const [backendData, setBackendData] = useState(null);
+ const [userName, setUserName] = useState("");
 
   const checkBackendHealth = async () => {
     setBackendStatus('checking');
@@ -32,10 +33,23 @@ export default function App() {
       setBackendStatus('offline');
     }
   };
+  const fetchUserProfile = async () => {
+  try {
+    const res = await axios.get('/api/v1/profile');
+
+    if (res.data.user_name) {
+      setUserName(res.data.user_name);
+    }
+  } catch (error) {
+    console.log("Profile fetch failed");
+    setUserName("Demo User");
+  }
+};
 
   useEffect(() => {
-    checkBackendHealth();
-  }, []);
+  checkBackendHealth();
+  fetchUserProfile();
+}, []);
 
   const activeNavItem = navItems.find((item) => item.id === activeTab) || navItems[0];
 
@@ -68,11 +82,12 @@ export default function App() {
     <div className="min-h-screen bg-slate-950 text-slate-100 flex">
       {/* Sidebar Navigation */}
       <Sidebar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-      />
+  activeTab={activeTab}
+  setActiveTab={setActiveTab}
+  isOpen={isMobileMenuOpen}
+  onClose={() => setIsMobileMenuOpen(false)}
+  userName={userName}
+/>
 
       {/* Main App Content Area */}
       <div className="flex-1 flex flex-col min-w-0 lg:pl-64">

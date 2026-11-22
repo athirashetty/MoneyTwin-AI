@@ -1,4 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+
+from app.db.session import get_db
 from app.services.profile_store import profile_store
 from app.services.financial_engine import calculate_health_score
 
@@ -6,12 +9,13 @@ router = APIRouter()
 
 
 @router.get("", summary="Get Financial Health Score")
-def get_financial_health_score():
+def get_financial_health_score(db: Session = Depends(get_db)):
     """
-    Evaluates the user's financial health score (0 - 100) across 5 core financial pillars.
+    Evaluates the user's financial health score (0 - 100) across 5 core financial pillars
+    using data persisted in the database.
     """
-    profile = profile_store.get_profile()
-    metrics = profile_store.get_calculated_metrics(profile)
+    profile = profile_store.get_profile(db=db)
+    metrics = profile_store.get_calculated_metrics(profile=profile, db=db)
 
     # Discretionary ratio
     total_income = metrics.total_income

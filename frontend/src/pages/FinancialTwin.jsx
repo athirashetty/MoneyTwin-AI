@@ -132,6 +132,7 @@ export default function FinancialTwin({ onNavigate }) {
   }
 
   const { profile, metrics, updated_at } = profileData;
+  const userName = profileData.user_name || "User";
 
   return (
     <div className="space-y-6 pb-12">
@@ -354,7 +355,7 @@ export default function FinancialTwin({ onNavigate }) {
           </div>
           <div className="space-y-1">
             <div className="flex items-center space-x-2">
-              <h2 className="text-lg font-bold text-white">Aarav Sharma</h2>
+              <h2 className="text-lg font-bold text-white">{userName}</h2>
               <Badge variant="default" size="sm">
                 Age 28 • Lead SWE
               </Badge>

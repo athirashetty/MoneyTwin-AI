@@ -148,3 +148,21 @@ export const calculateSIP = async (monthlyInvestment, annualReturnRate, tenureYe
   });
   return res.data;
 };
+export const getForecast = async (months = 6, persist = false) => {
+  try {
+    const res = await apiClient.get('/api/v1/forecast', {
+      params: {
+        months,
+        persist,
+      },
+    });
+
+    return { data: res.data, isLive: true };
+  } catch (err) {
+    return {
+      data: null,
+      isLive: false,
+      error: err.message,
+    };
+  }
+};

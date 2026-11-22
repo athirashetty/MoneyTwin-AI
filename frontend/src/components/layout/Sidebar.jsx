@@ -31,6 +31,7 @@ export default function Sidebar({
   setActiveTab,
   isOpen,
   onClose,
+  userName,
 }) {
   return (
     <>
@@ -124,10 +125,12 @@ export default function Sidebar({
             </div>
             <div className="flex items-center space-x-2 pt-1">
               <div className="h-7 w-7 rounded-full bg-emerald-800/50 border border-emerald-600/40 text-emerald-200 text-xs font-bold flex items-center justify-center">
-                AS
+                {userName?.split(" ").map(n => n[0]).join("")}
               </div>
               <div className="truncate">
-                <p className="text-xs font-semibold text-white truncate">Aarav Sharma</p>
+                <p className="text-xs font-semibold text-white truncate">
+                  {userName}
+                  </p>
                 <p className="text-[10px] text-slate-400 truncate">Bengaluru • INR (₹)</p>
               </div>
             </div>
