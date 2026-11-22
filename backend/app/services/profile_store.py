@@ -47,7 +47,7 @@ class ProfileStore:
     def _ensure_default_profile(self, db: Session, user_id: Optional[int] = None) -> FinancialProfile:
         """
         Ensures a User and FinancialProfile exist in the database.
-        If empty, automatically initializes the default Aarav Sharma profile.
+        If empty, automatically initializes the default Demo profile.
         """
         # Ensure database tables exist
         Base.metadata.create_all(bind=engine)
@@ -57,21 +57,21 @@ class ProfileStore:
         if user_id is not None:
             user = db.query(User).filter(User.id == user_id).first()
         else:
-            user = db.query(User).filter(User.email == "aarav.sharma@example.com").first()
+            user = db.query(User).filter(User.email == "demo@example.com").first()
             if not user:
                 user = db.query(User).first()
 
         # 2. If no user exists, create default user
         if not user:
             user = User(
-                email="aarav.sharma@example.com",
-                full_name="Aarav Sharma",
-                age=28,
-                occupation="Lead Software Engineer",
-                location="Bengaluru, India",
-                risk_profile="Moderate Aggressive",
-                is_active=True,
-            )
+    email="demo@example.com",
+    full_name="Demo User",
+    age=28,
+    occupation="Software Engineer",
+    location="Bengaluru, India",
+    risk_profile="Moderate Aggressive",
+    is_active=True,
+)
             db.add(user)
             db.flush()
 
@@ -194,10 +194,11 @@ class ProfileStore:
                 else datetime.now(timezone.utc).isoformat()
             )
             return FinancialProfileResponse(
-                profile=profile_schema,
-                metrics=metrics,
-                updated_at=updated_at,
-            )
+    user_name=orm_profile.user.full_name,
+    profile=profile_schema,
+    metrics=metrics,
+    updated_at=updated_at,
+)
 
 
 profile_store = ProfileStore()

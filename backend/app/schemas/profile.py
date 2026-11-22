@@ -37,6 +37,7 @@ class CalculatedMetrics(BaseModel):
 
 
 class FinancialProfileResponse(BaseModel):
+    user_name: str
     profile: FinancialProfileBase
     metrics: CalculatedMetrics
     updated_at: str

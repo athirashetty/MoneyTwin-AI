@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TrendingUp,
   Receipt,
@@ -21,15 +21,39 @@ import {
   mockProfile,
 } from '../data/mockData';
 import { formatINR, formatCompactINR } from '../utils/formatters';
+import { getForecast } from '../services/api';
 
 export default function CashFlow() {
   const [filterType, setFilterType] = useState('all');
+    const [forecastData, setForecastData] = useState([]);
+  const [forecastLive, setForecastLive] = useState(false);
 
-  const filteredData = mockCashflowMonthly.filter((item) => {
-    if (filterType === 'actual') return item.type === 'actual';
-    if (filterType === 'forecast') return item.type === 'forecast';
-    return true;
-  });
+    useEffect(() => {
+    const loadForecast = async () => {
+      const result = await getForecast(6, false);
+
+      if (result.data) {
+        setForecastData(result.data.forecasts);
+        setForecastLive(result.isLive);
+      }
+    };
+
+    loadForecast();
+  }, []);
+
+  const filteredData = forecastData.length
+  ? forecastData.map((item) => ({
+      month: item.month_label,
+      type: 'forecast',
+      income: item.predicted_income,
+      expenses: item.predicted_expenses,
+      savings: item.predicted_savings,
+    }))
+  : mockCashflowMonthly.filter((item) => {
+      if (filterType === 'actual') return item.type === 'actual';
+      if (filterType === 'forecast') return item.type === 'forecast';
+      return true;
+    });
 
   const totalIncome = mockProfile.metrics.monthlyIncome;
   const totalExpenses = mockProfile.metrics.monthlyExpenses;
